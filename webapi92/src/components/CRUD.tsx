@@ -32,12 +32,16 @@ const CRUD = () => {
 
   const handleDelete = (PkUsuario: number) => {
     fetch(`https://localhost:7290/Usuarios/${PkUsuario}`, { method: 'DELETE' })
-      .then(() => setUsers(users.filter(user => user.PkUsuario !== PkUsuario)));
+      .then(response => {
+        if (response.ok) {
+          setUsers(users.filter(user => user.PkUsuario !== PkUsuario));
+        } else {
+          console.error('Error:', response.status);
+        }
+      });
   };
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-
     fetch('https://localhost:7290/Usuarios/', {
       method: 'POST',
       headers: {
