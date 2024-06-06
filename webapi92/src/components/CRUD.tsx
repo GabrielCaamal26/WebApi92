@@ -20,7 +20,8 @@ const CRUD = () => {
   };
 
   return (
-    <table>
+    <div className='overflow-x-auto'>
+    <table className='table'>
       <thead>
         <tr>
           <th>Nombre</th>
@@ -45,6 +46,7 @@ const CRUD = () => {
         ))}
       </tbody>
     </table>
+    </div>
   );
 };
 
