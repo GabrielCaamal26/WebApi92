@@ -58,7 +58,7 @@ const CRUD = () => {
 
   return (
     <div>
-    <button onClick={()=> setFormVisible(true)} className='btn btn-outline btn-success'>Agregar Usuario</button>
+    <button onClick={()=> setFormVisible(true)} className='btn btn-outline btn-info'>Agregar Usuario</button>
     {isFormVisible && ( // Solo muestra el formulario si isFormVisible es true
         <form onSubmit={handleSubmit}>
           <label>
@@ -77,7 +77,7 @@ const CRUD = () => {
             Rol:
             <input type="text" value={fkRol} onChange={e => setFkRol(e.target.value)} />
           </label>
-          <button type="submit">Crear usuario</button>
+          <button type="submit" className='btn btn-outline btn-success'>Crear usuario</button>
         </form>
       )}
     <div className='overflow-x-auto'>
