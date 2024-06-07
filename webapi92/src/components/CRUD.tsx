@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 interface User {
-  PkUsuario: number;
-  Nombre: string;
-  User: string;
-  Password: string;
-  FkRol: number;
+  pkUsuario: number;
+  nombre: string;
+  user: string;
+  password: string;
+  fkRol: number;
 }
 
 const CRUD = () => {
@@ -14,7 +14,7 @@ const CRUD = () => {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
   const [fkRol, setFkRol] = useState('');
-  const [isFormVisible, setFormVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetch('https://localhost:7290/Usuarios/')
@@ -25,21 +25,22 @@ const CRUD = () => {
       });
   }, []);
 
-  const handleUpdate = (PkUsuario: number) => {
+  const handleUpdate = (pkUsuario: number) => {
     // Aquí puedes manejar la actualización
     // Por ejemplo, puedes abrir un formulario de actualización o redirigir a una página de actualización
   };
 
-  const handleDelete = (PkUsuario: number) => {
-    fetch(`https://localhost:7290/Usuarios/${PkUsuario}`, { method: 'DELETE' })
+  const handleDelete = (pkUsuario: number) => {
+    fetch(`https://localhost:7290/Usuarios/${pkUsuario}`, { method: 'DELETE' })
       .then(response => {
         if (response.ok) {
-          setUsers(users.filter(user => user.PkUsuario !== PkUsuario));
+          setUsers(users.filter(user => user.pkUsuario !== pkUsuario));
         } else {
           console.error('Error:', response.status);
         }
       });
   };
+  
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     fetch('https://localhost:7290/Usuarios/', {
@@ -58,32 +59,46 @@ const CRUD = () => {
       .then(data => {
         setUsers(prevUsers => [...prevUsers, data]);
       });
+      setIsModalOpen(false);
   };
 
+  const openModal = () => {
+    const modal = document.querySelector("#modal") as HTMLDialogElement;
+    if(modal) {
+      modal.showModal();
+    }
+  }
+
   return (
-    <div>
-    <button onClick={()=> setFormVisible(true)} className='btn btn-outline btn-info'>Agregar Usuario</button>
-    {isFormVisible && ( // Solo muestra el formulario si isFormVisible es true
-        <form onSubmit={handleSubmit}>
-          <label>
-            Nombre:
-            <input type="text" value={nombre} onChange={e => setNombre(e.target.value)} />
-          </label>
-          <label>
-            Usuario:
-            <input type="text" value={user} onChange={e => setUser(e.target.value)} />
-          </label>
-          <label>
-            Contraseña:
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-          </label>
-          <label>
-            Rol:
-            <input type="text" value={fkRol} onChange={e => setFkRol(e.target.value)} />
-          </label>
-          <button type="submit" className='btn btn-outline btn-success'>Crear usuario</button>
-        </form>
-      )}
+    <>
+    <button className='btn btn-outline btn-info' onClick={() => openModal()}>Agregar Usuario</button>
+    {isModalOpen && (
+        <dialog id="modal" className="modal">
+          <form className='modal-box' onSubmit={handleSubmit}>
+              <label className='input input-bordered input-accent flex items-center gap-2'>
+                Nombre:
+                <input className='grow' type="text" value={nombre} onChange={e => setNombre(e.target.value)} />
+              </label>
+
+              <label className='input input-bordered flex items-center gap-2'>
+                Usuario:
+                <input type="text" value={user} onChange={e => setUser(e.target.value)} />
+              </label>
+
+              <label className='input input-bordered flex items-center gap-2'>
+                Contraseña:
+                <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+              </label>
+
+              <label className='input input-bordered flex items-center gap-2'>
+                Rol:
+                <input type="text" value={fkRol} onChange={e => setFkRol(e.target.value)} />
+              </label>
+
+              <button type="submit" className='btn btn-outline btn-success'>Crear usuario</button>
+            </form>
+        </dialog>
+        )}
     <div className='overflow-x-auto'>
     <table className='table'>
       <thead>
@@ -97,21 +112,21 @@ const CRUD = () => {
       </thead>
       <tbody>
         {users.map(user => (
-          <tr key={user.PkUsuario}>
-            <td>{user.Nombre}</td>
-            <td>{user.User}</td>
-            <td>{user.Password}</td>
-            <td>{user.FkRol}</td>
+          <tr key={user.pkUsuario}>
+            <td>{user.nombre}</td>
+            <td>{user.user}</td>
+            <td>{user.password}</td>
+            <td>{user.fkRol}</td>
             <td>
-              <button onClick={() => handleUpdate(user.PkUsuario)} className='btn btn-outline btn-warning'>Actualizar</button>
-              <button onClick={() => handleDelete(user.PkUsuario)} className='btn btn-outline btn-error'>Eliminar</button>
+              <button onClick={() => handleUpdate(user.pkUsuario)} className='btn btn-outline btn-warning'>Actualizar</button>
+              <button onClick={() => handleDelete(user.pkUsuario)} className='btn btn-outline btn-error'>Eliminar</button>
             </td>
           </tr>
         ))}
       </tbody>
     </table>
     </div>
-    </div>
+    </>
   );
 };
 
